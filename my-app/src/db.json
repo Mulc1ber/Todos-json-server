@@ -1,3 +1,12 @@
 {
-    "todos": [{ "id": 1, "title": "реализовать задачи с помощью json server" }]
+  "todos": [
+    {
+      "id": 3,
+      "title": "задачa с помощью firebase"
+    },
+    {
+      "title": "ewew",
+      "id": 17
+    }
+  ]
 }

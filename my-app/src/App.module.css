@@ -1,7 +1,14 @@
-.App {
-    text-align: center;
+.app {
+    /* text-align: center; */
+    width: 900px;
+    margin: 0 auto;
 }
 
+.todos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
 .loader {
     position: fixed;
@@ -23,4 +30,15 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.listTodos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.items {
+    display: flex;
+    justify-content: space-between;
 }
