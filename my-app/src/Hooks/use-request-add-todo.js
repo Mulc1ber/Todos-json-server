@@ -4,6 +4,11 @@ export const useRequestAddTodo = (refreshTodos) => {
     const [isCreating, setIsCreating] = useState(false);
 
     const requestAddTodo = (inputTodo, setInputTodo) => {
+        if (!inputTodo) {
+            console.log('Пустое значение');
+            return;
+        }
+        
         setIsCreating(true);
 
         fetch('http://localhost:3005/todos', {

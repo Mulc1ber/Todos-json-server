@@ -1,6 +1,6 @@
 .app {
     /* text-align: center; */
-    width: 900px;
+    width: 700px;
     margin: 0 auto;
 }
 
@@ -41,4 +41,7 @@
 .items {
     display: flex;
     justify-content: space-between;
+    /* border-top: 1px solid #cfcfcf; */
+    border-bottom: 1px solid #cfcfcf;
+    padding: 3px 0;
 }
