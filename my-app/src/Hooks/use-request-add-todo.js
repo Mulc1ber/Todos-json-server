@@ -8,7 +8,7 @@ export const useRequestAddTodo = (refreshTodos) => {
             console.log('Пустое значение');
             return;
         }
-        
+
         setIsCreating(true);
 
         fetch('http://localhost:3005/todos', {

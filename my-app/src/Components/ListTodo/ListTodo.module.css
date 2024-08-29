@@ -1,0 +1,13 @@
+.items {
+    display: flex;
+    justify-content: space-between;
+    /* border-top: 1px solid #cfcfcf; */
+    border-bottom: 1px solid #cfcfcf;
+    padding: 3px 0;
+}
+
+.wrapButtons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

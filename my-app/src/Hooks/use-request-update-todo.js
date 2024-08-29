@@ -1,39 +1,19 @@
-// import { useState, useEffect } from 'react';
+// import { useState } from 'react';
 
+export const useRequestUpdateTodo = () => {
+    const requestUpdateTodo = (id, updatedData) => {
+        fetch(`http://localhost:3005/todos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json;charset=utf-8' },
+            body: JSON.stringify({ title: updatedData }),
+        })
+            .then((rawResponse) => rawResponse.json())
+            .then((response) => {
+                console.log('Обновление задачи:', response);
+            });
+    };
 
-// const EditableField = () => {
-//     const [isEditing, setIsEditing] = useState(false);
-//     const [value, setValue] = useState("Текст для редактирования");
-  
-//     const handleEdit = () => {
-//       setIsEditing(true);
-//     };
-  
-//     const handleChange = (e) => {
-//       setValue(e.target.value);
-//     };
-  
-//     const handleSave = () => {
-//       setIsEditing(false);
-//       // Добавьте здесь логику сохранения изменений
-//     };
-  
-//     if (isEditing) {
-//       return (
-//         <input
-//           type="text"
-//           value={value}
-//           onChange={handleChange}
-//           onBlur={handleSave}
-//         />
-//       );
-//     } else {
-//       return (
-//         <div onClick={handleEdit}>
-//           {value}
-//         </div>
-//       );
-//     }
-//   };
-  
-//   export default EditableField;
+    return {
+        requestUpdateTodo,
+    };
+};

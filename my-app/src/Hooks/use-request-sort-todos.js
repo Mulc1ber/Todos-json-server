@@ -1,24 +1,23 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
-export const useRequestSortTodos = (refreshTodos) => {
-    const [isSort, setIsSort] = useState(false);
+export const useRequestSortTodos = (refreshTodos, updateListTodos) => {
+    const requestSortTodos = (sortTodos) => {
+        // false - id; true - title
+        if (sortTodos) {
+            updateListTodos([]);
+            return;
+        }
 
-    const requestSortTodos = () => {
-        setIsSort(true);
-
-        fetch('http://localhost:3005/todos?sortBy=title&order=asc')
+        fetch('http://localhost:3005/todos?_sort=title')
             .then((rawResponse) => rawResponse.json())
             .then((response) => {
-                console.log(response);
+                console.log('Сортировка задач:', response);
+                updateListTodos(response);
                 refreshTodos();
-            })
-            .finally(() => {
-                setIsSort(false);
             });
     };
 
     return {
-        isSort,
         requestSortTodos,
     };
 };

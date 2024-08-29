@@ -8,7 +8,7 @@ export const useRequestSearchTodos = (refreshTodos, updateListTodos) => {
         if (!searchValue) {
             console.log('Пустое значение в поле "ПОИСК"');
             // setSearchResults([])
-            updateListTodos([])
+            updateListTodos([]);
             return;
         }
 

@@ -8,6 +8,8 @@ import {
     useRequestSearchTodos,
     useRequestSortTodos,
 } from './Hooks';
+import { ListTodo } from './Components/ListTodo/ListTodo';
+import { Button } from './Components/Button/Button';
 
 export const App = () => {
     const [inputTodo, setInputTodo] = useState('');
@@ -15,37 +17,31 @@ export const App = () => {
     const [searchValue, setSearchValue] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [titleEdit, setTitleEdit] = useState('');
-    const [listTodos , setListTodos] = useState([]);
-
+    const [listTodos, setListTodos] = useState([]);
+    const [hasSort, setHasSort] = useState(false);
 
     const refreshTodos = () => setRefreshTodosFlag(!refreshTodosFlag);
 
     const updateListTodos = (upList) => setListTodos(upList);
 
-    const { isLoading, todos } = useRequestGetTodos(refreshTodosFlag);
-    
+    // const sortTodos = () => setHasSort(!hasSort);
+
+    const { isLoading, todos } = useRequestGetTodos(refreshTodosFlag, updateListTodos);
+
     const { isCreating, requestAddTodo } = useRequestAddTodo(refreshTodos);
     const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo(refreshTodos);
     // const {} = useRequestUpdateTodo();
 
-    const { isSearching, searchResults, requestSearchTodos } = useRequestSearchTodos(refreshTodos, updateListTodos);
-    const { isSort, requestSortTodos } = useRequestSortTodos(refreshTodos);
+    const { isSearching, searchResults, requestSearchTodos } = useRequestSearchTodos(
+        refreshTodos,
+        updateListTodos,
+    );
+    const { requestSortTodos } = useRequestSortTodos(refreshTodos, updateListTodos);
 
-
-
-    const handleEdit = () => {
-        setIsEditing(true);
+    const handleSort = () => {
+        requestSortTodos(hasSort);
+        setHasSort(!hasSort);
     };
-
-    const handleChange = (e) => {
-        setTitleEdit(e.target.value);
-    };
-
-    const handleSave = () => {
-        setIsEditing(false);
-    // Добавьте здесь логику сохранения изменений
-    };
-
 
     return (
         <div className={styles.app}>
@@ -58,14 +54,16 @@ export const App = () => {
                         placeholder="Новая задача"
                         value={inputTodo}
                         onChange={({ target }) => setInputTodo(target.value)}
-                        onKeyDown={(e) => (e.key === 'Enter' ? requestAddTodo(inputTodo, setInputTodo) : null)}
+                        onKeyDown={(e) =>
+                            e.key === 'Enter' ? requestAddTodo(inputTodo, setInputTodo) : null
+                        }
                     />
-                    <button
+                    <Button
                         onClick={() => requestAddTodo(inputTodo, setInputTodo)}
                         disabled={isCreating}
                     >
                         Добавить задачу
-                    </button>
+                    </Button>
                 </div>
 
                 <div style={{ display: 'flex', gap: '5px', width: '100%' }}>
@@ -76,67 +74,39 @@ export const App = () => {
                         value={searchValue}
                         onChange={({ target }) => setSearchValue(target.value)}
                     />
-                    <button onClick={() => requestSearchTodos(searchValue)} disabled={isSearching}>
+                    <Button onClick={() => requestSearchTodos(searchValue)} disabled={isSearching}>
                         Поиск
-                    </button>
+                    </Button>
                 </div>
 
                 <div>
-                    <button onClick={requestSortTodos} disabled={isSort}>
-                        Сортировать
-                    </button>
+                    <Button onClick={handleSort}>Сортировать</Button>
                 </div>
 
                 <div className={styles.listTodos}>
                     {isLoading ? (
                         <div className={styles.loader}></div>
-                    ) : 
-                    listTodos.length !== 0 ? (
-                        listTodos.map(({ id, title }) => (
-                            <li key={id} className={styles.items}>
-                                <span>{title}</span>
-                                <div>
-                                    <button
-                                        onClick={() => requestDeteleTodo(id)}
-                                        disabled={isDeleting}
-                                    >
-                                        Удалить
-                                    </button>
-                                    <button>Изменить</button>
-                                </div>
-                            </li>
+                    ) : listTodos.length !== 0 ? (
+                        listTodos.map(({ id, title }, index, array) => (
+                            <ListTodo
+                                id={id}
+                                title={title}
+                                index={index}
+                                array={array}
+                                isDeleting={isDeleting}
+                                requestDeteleTodo={requestDeteleTodo}
+                            />
                         ))
-                    ) : 
-                    // searchResults.length !== 0 ? (
-                    //     searchResults.map(({ id, title }) => (
-                    //         <li key={id} className={styles.items}>
-                    //             <span>{title}</span>
-                    //             <div>
-                    //                 <button
-                    //                     onClick={() => requestDeteleTodo(id)}
-                    //                     disabled={isDeleting}
-                    //                 >
-                    //                     Удалить
-                    //                 </button>
-                    //                 <button>Изменить</button>
-                    //             </div>
-                    //         </li>
-                    //     ))
-                    // ) : 
-                    (   
-                        todos.map(({ id, title }) => (
-                            <li key={id} className={styles.items}>
-                                <span>{title}</span>
-                                <div style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
-                                    <button
-                                        onClick={() => requestDeteleTodo(id)}
-                                        disabled={isDeleting}
-                                    >
-                                        Удалить
-                                    </button>
-                                    <button>Изменить</button>
-                                </div>
-                            </li>
+                    ) : (
+                        todos.map(({ id, title }, index, array) => (
+                            <ListTodo
+                                id={id}
+                                title={title}
+                                index={index}
+                                array={array}
+                                isDeleting={isDeleting}
+                                requestDeteleTodo={requestDeteleTodo}
+                            />
                         ))
                     )}
                 </div>

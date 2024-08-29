@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useRequestGetTodos = (refreshTodosFlag) => {
+export const useRequestGetTodos = (refreshTodosFlag, updateListTodos) => {
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -11,6 +11,7 @@ export const useRequestGetTodos = (refreshTodosFlag) => {
             .then((loadedData) => loadedData.json())
             .then((loadedTodos) => {
                 setTodos(loadedTodos);
+                // updateListTodos(loadedTodos);
             })
             .finally(() => setIsLoading(false));
     }, [refreshTodosFlag]);
