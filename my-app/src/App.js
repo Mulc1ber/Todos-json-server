@@ -89,6 +89,7 @@ export const App = () => {
                     ) : listTodos.length !== 0 ? (
                         listTodos.map(({ id, title }, index, array) => (
                             <ListTodo
+                                key={id}
                                 id={id}
                                 title={title}
                                 index={index}
@@ -100,6 +101,7 @@ export const App = () => {
                     ) : (
                         todos.map(({ id, title }, index, array) => (
                             <ListTodo
+                                key={id}
                                 id={id}
                                 title={title}
                                 index={index}
