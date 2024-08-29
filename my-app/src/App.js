@@ -20,14 +20,17 @@ export const App = () => {
 
     const refreshTodos = () => setRefreshTodosFlag(!refreshTodosFlag);
 
+    const updateListTodos = (upList) => setListTodos(upList);
+
     const { isLoading, todos } = useRequestGetTodos(refreshTodosFlag);
     
     const { isCreating, requestAddTodo } = useRequestAddTodo(refreshTodos);
     const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo(refreshTodos);
     // const {} = useRequestUpdateTodo();
 
-    const { isSearching, searchResults, requestSearchTodos } = useRequestSearchTodos(refreshTodos);
+    const { isSearching, searchResults, requestSearchTodos } = useRequestSearchTodos(refreshTodos, updateListTodos);
     const { isSort, requestSortTodos } = useRequestSortTodos(refreshTodos);
+
 
 
     const handleEdit = () => {
@@ -88,6 +91,22 @@ export const App = () => {
                     {isLoading ? (
                         <div className={styles.loader}></div>
                     ) : 
+                    listTodos.length !== 0 ? (
+                        listTodos.map(({ id, title }) => (
+                            <li key={id} className={styles.items}>
+                                <span>{title}</span>
+                                <div>
+                                    <button
+                                        onClick={() => requestDeteleTodo(id)}
+                                        disabled={isDeleting}
+                                    >
+                                        Удалить
+                                    </button>
+                                    <button>Изменить</button>
+                                </div>
+                            </li>
+                        ))
+                    ) : 
                     // searchResults.length !== 0 ? (
                     //     searchResults.map(({ id, title }) => (
                     //         <li key={id} className={styles.items}>
@@ -104,7 +123,7 @@ export const App = () => {
                     //         </li>
                     //     ))
                     // ) : 
-                    (
+                    (   
                         todos.map(({ id, title }) => (
                             <li key={id} className={styles.items}>
                                 <span>{title}</span>

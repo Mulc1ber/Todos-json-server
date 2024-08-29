@@ -1,13 +1,14 @@
 import { useState } from 'react';
 
-export const useRequestSearchTodos = (refreshTodos) => {
+export const useRequestSearchTodos = (refreshTodos, updateListTodos) => {
     const [isSearching, setIsSearching] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
 
     const requestSearchTodos = (searchValue) => {
         if (!searchValue) {
             console.log('Пустое значение в поле "ПОИСК"');
-            setSearchResults([])
+            // setSearchResults([])
+            updateListTodos([])
             return;
         }
 
@@ -17,6 +18,7 @@ export const useRequestSearchTodos = (refreshTodos) => {
             .then((response) => {
                 console.log(response);
                 // setSearchResults(response);
+                updateListTodos(response);
                 refreshTodos();
             })
             .catch((error) => {
