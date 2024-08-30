@@ -4,7 +4,7 @@ import { useRequestUpdateTodo } from '../../Hooks';
 import styles from './ListTodo.module.css';
 import { Button } from '../Button/Button';
 
-export const ListTodo = ({ id, title, index, array, isDeleting, requestDeteleTodo }) => {
+export const ListTodo = ({ id, title, index, isDeleting, requestDeteleTodo }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [titleState, setTitleState] = useState(title);
 
@@ -18,6 +18,11 @@ export const ListTodo = ({ id, title, index, array, isDeleting, requestDeteleTod
         }
     }, [isEditing]);
 
+    const handleInputBlur = () => {
+        requestUpdateTodo(id, titleState)
+        setIsEditing(false)
+    }
+
     return (
         <li key={id} className={styles.items}>
             {isEditing === index ? (
@@ -26,7 +31,7 @@ export const ListTodo = ({ id, title, index, array, isDeleting, requestDeteleTod
                         type="text"
                         value={titleState}
                         onChange={({ target }) => setTitleState(target.value)}
-                        onBlur={() => requestUpdateTodo(id, titleState)}
+                        onBlur={handleInputBlur}
                         ref={refInput}
                         style={{ width: '100%' }}
                     />

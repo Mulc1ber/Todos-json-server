@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import styles from './App.module.css';
+import { ListTodo } from './Components/ListTodo/ListTodo';
+import { Button } from './Components/Button/Button';
 import {
     useRequestGetTodos,
     useRequestAddTodo,
@@ -8,15 +9,12 @@ import {
     useRequestSearchTodos,
     useRequestSortTodos,
 } from './Hooks';
-import { ListTodo } from './Components/ListTodo/ListTodo';
-import { Button } from './Components/Button/Button';
+import styles from './App.module.css';
 
 export const App = () => {
     const [inputTodo, setInputTodo] = useState('');
     const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
     const [searchValue, setSearchValue] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
-    const [titleEdit, setTitleEdit] = useState('');
     const [listTodos, setListTodos] = useState([]);
     const [hasSort, setHasSort] = useState(false);
 
@@ -32,7 +30,7 @@ export const App = () => {
     const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo(refreshTodos);
     // const {} = useRequestUpdateTodo();
 
-    const { isSearching, searchResults, requestSearchTodos } = useRequestSearchTodos(
+    const { isSearching, requestSearchTodos } = useRequestSearchTodos(
         refreshTodos,
         updateListTodos,
     );
@@ -87,25 +85,23 @@ export const App = () => {
                     {isLoading ? (
                         <div className={styles.loader}></div>
                     ) : listTodos.length !== 0 ? (
-                        listTodos.map(({ id, title }, index, array) => (
+                        listTodos.map(({ id, title }, index) => (
                             <ListTodo
                                 key={id}
                                 id={id}
                                 title={title}
                                 index={index}
-                                array={array}
                                 isDeleting={isDeleting}
                                 requestDeteleTodo={requestDeteleTodo}
                             />
                         ))
                     ) : (
-                        todos.map(({ id, title }, index, array) => (
+                        todos.map(({ id, title }, index) => (
                             <ListTodo
                                 key={id}
                                 id={id}
                                 title={title}
                                 index={index}
-                                array={array}
                                 isDeleting={isDeleting}
                                 requestDeteleTodo={requestDeteleTodo}
                             />
