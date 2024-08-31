@@ -11,3 +11,7 @@
     align-items: center;
     gap: 5px;
 }
+
+.inputEdit {
+    width: 100%;
+}

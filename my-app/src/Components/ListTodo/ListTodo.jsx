@@ -19,9 +19,9 @@ export const ListTodo = ({ id, title, index, isDeleting, requestDeteleTodo }) =>
     }, [isEditing]);
 
     const handleInputBlur = () => {
-        requestUpdateTodo(id, titleState)
-        setIsEditing(false)
-    }
+        requestUpdateTodo(id, titleState);
+        setIsEditing(false);
+    };
 
     return (
         <li key={id} className={styles.items}>
@@ -33,7 +33,7 @@ export const ListTodo = ({ id, title, index, isDeleting, requestDeteleTodo }) =>
                         onChange={({ target }) => setTitleState(target.value)}
                         onBlur={handleInputBlur}
                         ref={refInput}
-                        style={{ width: '100%' }}
+                        className={styles.inputEdit}
                     />
                 </>
             ) : (
