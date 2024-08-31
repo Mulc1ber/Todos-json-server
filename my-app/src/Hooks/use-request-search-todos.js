@@ -1,22 +1,20 @@
-export const useRequestSearchTodos = (refreshTodos, updateListTodos) => {
-    const requestSearchTodos = (searchValue) => {
+export const useRequestSearchTodos = (refreshTodos) => {
+    const requestSearchTodos = (searchValue, setListTodos) => {
         if (!searchValue) {
-            updateListTodos([]);
+            refreshTodos();
             return;
         }
 
         fetch(`http://localhost:3005/todos?title_like=${searchValue}`)
             .then((rawResponse) => rawResponse.json())
             .then((response) => {
-                console.log('response SEARCH: ', response, response.length === 0);
+                // console.log('Список совпадающих задач: ', response);
                 if (response.length === 0) {
-                    console.log('Ничего не найдено');
-                    updateListTodos([]);
-                    return;
+                    // console.log('Ничего не найдено');
+                    setListTodos([]);
+                } else {
+                    setListTodos(response);
                 }
-
-                updateListTodos(response);
-                // refreshTodos();
             })
             .catch((error) => {
                 console.log(error);

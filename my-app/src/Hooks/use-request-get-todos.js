@@ -1,22 +1,15 @@
-import { useState, useEffect } from 'react';
-
-export const useRequestGetTodos = (refreshTodosFlag) => {
-    const [todos, setTodos] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
+export const useRequestGetTodos = () => {
+    const requestGetTodos = (setListTodos, setIsLoading) => {
         setIsLoading(true);
-
         fetch('http://localhost:3005/todos')
             .then((loadedData) => loadedData.json())
             .then((loadedTodos) => {
-                setTodos(loadedTodos);
+                setListTodos(loadedTodos);
             })
             .finally(() => setIsLoading(false));
-    }, [refreshTodosFlag]);
+    };
 
     return {
-        isLoading,
-        todos,
+        requestGetTodos,
     };
 };

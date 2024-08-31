@@ -1,5 +1,3 @@
-// import { useState } from 'react';
-
 export const useRequestUpdateTodo = () => {
     const requestUpdateTodo = (id, updatedData) => {
         fetch(`http://localhost:3005/todos/${id}`, {

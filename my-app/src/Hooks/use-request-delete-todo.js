@@ -5,13 +5,13 @@ export const useRequestDeleteTodo = (refreshTodos) => {
 
     const requestDeteleTodo = (id) => {
         setIsDeleting(true);
-        console.log('id button', id);
+
         fetch(`http://localhost:3005/todos/${id}`, {
             method: 'DELETE',
         })
             .then((rawResponse) => rawResponse.json())
             .then((response) => {
-                console.log('Удаление задачи:', response);
+                // console.log('Задача удалена:', response);
                 refreshTodos();
             })
             .finally(() => {

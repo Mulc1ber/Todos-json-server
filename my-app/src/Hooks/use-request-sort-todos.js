@@ -1,19 +1,15 @@
-// import { useState } from 'react';
-
-export const useRequestSortTodos = (refreshTodos, updateListTodos) => {
-    const requestSortTodos = (sortTodos) => {
-        // false - id; true - title
+export const useRequestSortTodos = (refreshTodos) => {
+    const requestSortTodos = (sortTodos, setListTodos) => {
         if (sortTodos) {
-            updateListTodos([]);
+            refreshTodos();
             return;
         }
 
         fetch('http://localhost:3005/todos?_sort=title')
             .then((rawResponse) => rawResponse.json())
             .then((response) => {
-                console.log('Сортировка задач:', response);
-                updateListTodos(response);
-                refreshTodos();
+                // console.log('Сортировка задач:', response);
+                setListTodos(response);
             });
     };
 

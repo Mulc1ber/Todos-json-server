@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ListTodo } from './Components/ListTodo/ListTodo';
+import { Todo } from './Components/Todo/Todo';
 import { Button } from './Components/Button/Button';
 import {
     useRequestGetTodos,
@@ -13,55 +13,42 @@ import { debounce } from 'lodash';
 import { Input } from './Components/Input/Input';
 
 export const App = () => {
-    const [inputTodo, setInputTodo] = useState('');
-    const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
     const [listTodos, setListTodos] = useState([]);
+    const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [inputTodo, setInputTodo] = useState('');
     const [hasSort, setHasSort] = useState(false);
 
+    const [searchValue, setSearchValue] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredTasks, setFilteredTasks] = useState(listTodos); // tasks - ваш список задач
+    const [filteredTasks, setFilteredTasks] = useState(listTodos);
 
     const refreshTodos = () => setRefreshTodosFlag(!refreshTodosFlag);
 
-    const updateListTodos = (upList) => setListTodos(upList);
-
-    const { isLoading, todos } = useRequestGetTodos(refreshTodosFlag);
-
+    const { requestGetTodos } = useRequestGetTodos();
+    const { requestSearchTodos } = useRequestSearchTodos(refreshTodos);
+    const { requestSortTodos } = useRequestSortTodos(refreshTodos);
     const { isCreating, requestAddTodo } = useRequestAddTodo(refreshTodos);
     const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo(refreshTodos);
 
-    const { requestSearchTodos } = useRequestSearchTodos(refreshTodos, updateListTodos);
-    const { requestSortTodos } = useRequestSortTodos(refreshTodos, updateListTodos);
-
-    // useEffect(() => {
-    //     console.log('useEffect-  setListTodos(todos)', todos);
-    //     console.log('useEffect-  setListTodos(listTodos)', listTodos);
-    //     // setListTodos(todos);
-    //     // setListTodos(listTodos);
-
-    //     // if (searchValue !== '') {
-
-    //     // }
-    // }, []);
+    useEffect(() => {
+        if (searchValue.length > 0) {
+            requestSearchTodos(searchValue, setListTodos);
+        } else {
+            requestGetTodos(setListTodos, setIsLoading);
+        }
+    }, [refreshTodosFlag]);
 
     const handleSort = () => {
-        requestSortTodos(hasSort);
+        requestSortTodos(hasSort, setListTodos);
         setHasSort(!hasSort);
     };
 
-    // const handleSearchFilter = (array, searchText) => {
-    //     const resultFiltered = array.filter((item) =>
-    //         item.title.toLowerCase().includes(searchText.toLowerCase()),
-    //     );
-    //     return resultFiltered;
-    // };
-
     const handleSearch = debounce((searchTerm) => {
-        const filtered = todos.filter((task) =>
+        const filtered = listTodos.filter((task) =>
             task.title.toLowerCase().includes(searchTerm.toLowerCase()),
         );
-        // const filtered = handleSearchFilter(todos, searchTerm);
         setFilteredTasks(filtered);
     }, 300);
 
@@ -69,13 +56,12 @@ export const App = () => {
         setSearchTerm(target.value);
         handleSearch(target.value);
         console.log(searchTerm);
-        console.log('todos: ', todos);
         console.log('listTodos: ', listTodos);
     };
 
     const handleSearchValue = ({ target }) => {
         setSearchValue(target.value);
-        requestSearchTodos(target.value);
+        requestSearchTodos(target.value, setListTodos);
     };
 
     return (
@@ -113,7 +99,6 @@ export const App = () => {
                         value={searchTerm}
                         onChange={handleChange}
                     />
-                    <Button onClick={handleChange}>test</Button>
                 </div>
 
                 <div>
@@ -126,21 +111,18 @@ export const App = () => {
                     {isLoading ? (
                         <div className={styles.loader}></div>
                     ) : (
-                        (searchTerm.length !== 0
-                            ? filteredTasks
-                            : listTodos.length !== 0 || searchValue !== ''
-                              ? listTodos
-                              : todos
-                        ).map(({ id, title }, index) => (
-                            <ListTodo
-                                key={id}
-                                id={id}
-                                title={title}
-                                index={index}
-                                isDeleting={isDeleting}
-                                requestDeteleTodo={requestDeteleTodo}
-                            />
-                        ))
+                        (searchTerm.length !== 0 ? filteredTasks : listTodos).map(
+                            ({ id, title }, index) => (
+                                <Todo
+                                    key={id}
+                                    id={id}
+                                    title={title}
+                                    index={index}
+                                    isDeleting={isDeleting}
+                                    requestDeteleTodo={() => requestDeteleTodo(id)}
+                                />
+                            ),
+                        )
                     )}
                 </div>
             </div>

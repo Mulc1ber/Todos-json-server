@@ -5,7 +5,7 @@ export const useRequestAddTodo = (refreshTodos) => {
 
     const requestAddTodo = (inputTodo, setInputTodo) => {
         if (!inputTodo) {
-            console.log('Пустое значение');
+            console.log('Нечего добавлять');
             return;
         }
 
@@ -20,7 +20,7 @@ export const useRequestAddTodo = (refreshTodos) => {
         })
             .then((rawResponse) => rawResponse.json())
             .then((response) => {
-                console.log('Создание задачи:', response);
+                console.log('Задача создана:', response);
                 refreshTodos();
             })
             .finally(() => {
