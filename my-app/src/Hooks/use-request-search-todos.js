@@ -5,7 +5,7 @@ export const useRequestSearchTodos = (refreshTodos) => {
             return;
         }
 
-        fetch(`http://localhost:3005/todos?title_like=${searchValue}`)
+        fetch(`http://localhost:3005/todos?q=${searchValue}`)
             .then((rawResponse) => rawResponse.json())
             .then((response) => {
                 // console.log('Список совпадающих задач: ', response);
@@ -13,7 +13,10 @@ export const useRequestSearchTodos = (refreshTodos) => {
                     // console.log('Ничего не найдено');
                     setListTodos([]);
                 } else {
-                    setListTodos(response);
+                    const filtered = response.filter((todo) =>
+                        todo.title.toLowerCase().includes(searchValue.toLowerCase()),
+                    );
+                    setListTodos(filtered);
                 }
             })
             .catch((error) => {
